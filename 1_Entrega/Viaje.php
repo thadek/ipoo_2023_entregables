@@ -1,5 +1,11 @@
 <?php
 
+//CORRECCIONES: QUITAR LOS ECHO DE LA CLASE VIAJE Y CAMBIARLOS POR EXCEPTIONS O RETURNS DE RESPONSES.
+//VER EDITAR PASAJERO PARA QUE FUNCIONE CORRECTAMENTE
+// BUSCAR 
+
+
+
 class Viaje
 {
 
@@ -78,14 +84,15 @@ class Viaje
     /**
      * Agrega un pasajero al viaje
      * @param array $pasajero
+     * @return string $response
      */
     public function addPasajero($pasajero)
     {
         if (count($this->pasajeros) < $this->cantMaxPasajeros) {
             array_push($this->pasajeros, $pasajero);
-            echo "\nPasajero agregado\n";
+            return "\nPasajero agregado\n";
         } else {
-            echo "\n\033[31mNo se puede agregar el pasajero, el viaje está completo\n\033[0m";
+            throw new Exception("\n\033[31mNo se puede agregar el pasajero, el viaje está completo\n\033[0m");
         }
         
     }
@@ -104,10 +111,11 @@ class Viaje
      */
     public function getPasajero($dni)
     {
-        foreach ($this->pasajeros as $pasajero) {
-            if ($pasajero["dni"] == $dni) {
-                return $pasajero;
-            }
+        $pasajero = array_search($dni, array_column($this->pasajeros, 'dni')); 
+        if($pasajero || $pasajero === 0){
+            return $this->getPasajeros()[$pasajero];
+        }else{
+            throw new Exception("No se encontró el pasajero.");
         }
     }
 
@@ -115,19 +123,28 @@ class Viaje
      * Actualiza un pasajero del viaje
      * @param string $dni
      * @param array $pasajero
+     * @return string $response
      */
     public function updatePasajero($dni, $pasajero)
     {
-        foreach ($this->pasajeros as $pasajero) {
-            if ($pasajero["dni"] == $dni) {
-                $pasajero = $pasajero;
-            }
+        $pasajeroIndex = array_search($dni, array_column($this->pasajeros, 'dni')); 
+
+        if($pasajeroIndex|| $pasajeroIndex === 0){
+            $this->pasajeros[$pasajeroIndex] = $pasajero;
+        }else{
+            throw new Exception("No se encontró el pasajero.");
         }
+        
+
+        return "Se modifico correctamente.";
+
+        
     }
 
     /**
      * Elimina un pasajero del viaje
      * @param string $dni
+     * @return boolean $isDeleted
      */
     public function removePasajero($dni)
     {
@@ -135,9 +152,9 @@ class Viaje
         $pasajero = array_search($dni, array_column($this->pasajeros, 'dni')); 
         if($pasajero || $pasajero === 0){
             unset($this->pasajeros[$pasajero]);
-            echo "\n\nPasajero eliminado\n\n";
+            return true;
         }else{
-            echo "\n\nNo se encontró el pasajero\n\n";
+            throw new Exception("No existe ningún pasajero con el DNI $dni");
         }
          
     }
@@ -154,12 +171,13 @@ class Viaje
   
     public function verListaPasajeros()
     {
-        echo "Pasajeros: \n";
+        $response = "Pasajeros: \n";
         foreach ($this->getPasajeros() as $pasajero) {
-            echo "\nNombre: " . $pasajero["nombre"] . "\n";
-            echo "Apellido: " . $pasajero["apellido"] . "\n";
-            echo "DNI: " . $pasajero["dni"] . "\n\n";
+            $response = $response . "\nNombre: " . $pasajero["nombre"] . "\n".
+            "Apellido: " . $pasajero["apellido"] . "\n".
+             "DNI: " . $pasajero["dni"] . "\n\n";
         }
+        return $response;
     }
 
     public function __toString()

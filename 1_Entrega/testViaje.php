@@ -9,7 +9,7 @@ include_once('Viaje.php');
 function Menu()
 {
 
-    escribirAmarillo("1. Ver información del viaje\n2. Ver pasajeros\n3. Editar destino viaje \n4. Editar cantidad máxima de pasajeros\n5. Agregar pasajero\n6. Eliminar pasajero\n7. Salir\n");
+    escribirAmarillo("1. Ver información del viaje\n2. Ver pasajeros\n3. Editar destino viaje \n4. Editar cantidad máxima de pasajeros\n5. Agregar pasajero\n6. Editar Pasajero \n7. Ver pasajero por DNI \n8. Eliminar pasajero\n9. Salir\n");
 }
 
 /**
@@ -36,10 +36,14 @@ function agregarPasajero($viaje)
  */
 function eliminarPasajero($viaje)
 {
-    echo "Ingrese el DNI del pasajero a eliminar:";
+    echo "Ingrese el DNI del pasajero a eliminar:\n";
     $dni = trim(fgets(STDIN));
-    $viaje->removePasajero($dni);
+    $isDeleted = $viaje->removePasajero($dni);
+    if($isDeleted){
+        echo "\nSe eliminó correctamente el pasajero.\n";
+    }
 }
+
 
 
 /**
@@ -76,6 +80,32 @@ function escribirVerde($texto)
     echo "\033[32m" . $texto . "\033[0m";
 }
 
+
+function verPasajeros($viaje){
+    echo $viaje->verListaPasajeros();
+}
+
+function editarPasajero($viaje){
+    echo "Ingrese el DNI del pasajero a modificar\n";
+    $dni = trim(fgets(STDIN));
+    $pasajero = $viaje->getPasajero($dni);
+    echo "Ingrese el nombre del pasajero:\n";
+    $pasajero["nombre"] = trim(fgets(STDIN));
+    echo "Ingrese el apellido del pasajero\n";
+    $pasajero["apellido"] = trim(fgets(STDIN));
+    echo $viaje->updatePasajero($dni,$pasajero);
+}
+
+function verPasajero($viaje){
+    echo "\n\nIngrese el DNI del pasajero:\n\n";
+    $dni = trim(fgets(STDIN));
+    $pasajero = $viaje->getPasajero($dni);
+    echo "\n Pasajero :\n Nombre: "
+    .$pasajero["nombre"].
+    "\n Apellido:" . $pasajero["apellido"]. "\n DNI:" . $pasajero["dni"] . "\n\n" ; 
+}
+
+
 /**
  * Escribe en color amarillo
  * @param string $texto
@@ -99,7 +129,7 @@ function testViaje()
     $opcion = 0;
 
     escribirVerde("\n\nVIAJE FELIZ S.A.\n\n");
-    while ($opcion != 7) {
+    while ($opcion != 9) {
         try {
             Menu();
             echo "Ingrese una opción: ";
@@ -109,7 +139,7 @@ function testViaje()
                     escribirVerde("\n" . $viaje . "\n");
                     break;
                 case 2:
-                    $viaje->verListaPasajeros();
+                    verPasajeros($viaje);
                     break;
 
                 case 3:
@@ -122,10 +152,18 @@ function testViaje()
                 case 5:
                     agregarPasajero($viaje);
                     break;
+   
                 case 6:
+                    editarPasajero($viaje);
+                    break;
+
+                case 7:
+                    verPasajero($viaje);
+                    break;
+                case 8:
                     eliminarPasajero($viaje);
                     break;   
-                case 7:
+                case 9:
                    break;
                 default:
                     echo "Opción inválida";
