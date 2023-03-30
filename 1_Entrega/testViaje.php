@@ -166,7 +166,7 @@ function testViaje()
                 case 9:
                    break;
                 default:
-                    echo "Opción inválida";
+                    echo "Opción inválida\n";
                     break;
             }
         } catch (Exception $e) {

@@ -1,10 +1,5 @@
 <?php
 
-//CORRECCIONES: QUITAR LOS ECHO DE LA CLASE VIAJE Y CAMBIARLOS POR EXCEPTIONS O RETURNS DE RESPONSES.
-//VER EDITAR PASAJERO PARA QUE FUNCIONE CORRECTAMENTE
-// BUSCAR 
-
-
 
 class Viaje
 {
@@ -54,6 +49,11 @@ class Viaje
         $this->codigo = $codigo;
     }
 
+    /**
+     * Setea el destino del viaje
+     * @param string $destino
+     * @throws Exception
+     */
     public function setDestino($destino)
     {
         if($destino != ""){
@@ -63,6 +63,11 @@ class Viaje
         }
     }
 
+    /**
+     * Setea la cantidad maxima de pasajeros
+     * @param int $cantMaxPasajeros
+     * @throws Exception
+     */
     public function setCantMaxPasajeros($cantMaxPasajeros)
     {
         if(is_numeric($cantMaxPasajeros) && $cantMaxPasajeros > 0){
@@ -98,7 +103,8 @@ class Viaje
     }
 
     /**
-     * Retorna un array con los pasajeros del viaje
+     * Retorna el array con los pasajeros del viaje
+     * @return array $pasajeros
      */
     public function getPasajeros()
     {
@@ -159,6 +165,11 @@ class Viaje
          
     }
 
+    /**
+     * Setea el array de pasajeros
+     * @param array $pasajeros
+     * 
+     */
     public function setPasajeros($pasajeros)
     {
         if (count($pasajeros) <= $this->cantMaxPasajeros) {
@@ -169,6 +180,10 @@ class Viaje
     }
 
   
+    /**
+     * Muestra la lista de pasajeros
+     * @return string $response
+     */
     public function verListaPasajeros()
     {
         $response = "Pasajeros: \n";
@@ -186,6 +201,6 @@ class Viaje
         " - Destino: " . $this->getDestino() . 
         " - Cantidad de pasajeros: " . count($this->getPasajeros()) . 
         " - Cantidad máxima de pasajeros: " . $this->getCantMaxPasajeros() . 
-        "\n";
+        "\n\n" . $this->verListaPasajeros();
     }
 }
