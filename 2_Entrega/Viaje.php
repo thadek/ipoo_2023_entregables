@@ -166,22 +166,18 @@ class Viaje
 
     /**
      * Actualiza un pasajero del viaje
-     * @param string $dni
-     * @param Pasajero $pasajero
-     * 
+     * @param $pasajeroIndex
+     * @param $nombre
+     * @param $apellido
+     * @param $telefono
+     * @return void
      */
-    public function updatePasajero($dni, $pasajero)
+    public function updatePasajero($pasajeroIndex, $nombre, $apellido, $telefono)
     {
-
-        if ($pasajero instanceof Pasajero) {
-            $pSearch = $this->getPasajeros()[$this->getPasajero($dni)];
-            $pSearch->setNombre($pasajero->getNombre());
-            $pSearch->setApellido($pasajero->getApellido());
-            $pSearch->setDni($pasajero->getDni());
-            $pSearch->setTelefono($pasajero->getTelefono());
-        } else {
-            throw new Exception("El pasajero no es una instancia de la clase Pasajero");
-        }
+            $pSearch = $this->getPasajeros()[$pasajeroIndex];
+            $pSearch->setNombre($nombre);
+            $pSearch->setApellido($apellido);
+            $pSearch->setTelefono($telefono);   
     }
 
     /**

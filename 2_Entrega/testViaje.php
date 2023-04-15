@@ -143,18 +143,11 @@ function editarPasajero($viaje){
     if($pasajeroIndex === null){
         throw new Exception("No se encontró el pasajero con DNI: $dni");
     }
-
-    $pasajero = $viaje->getPasajeros()[$pasajeroIndex];
-
-    $pasajero->setNombre(leerYValidarValor("Ingrese el nombre del pasajero:\n","string"));
-   
-    $pasajero->setApellido(leerYValidarValor("Ingrese el apellido del pasajero:\n","string"));
-   
-    $pasajero->setDni(leerYValidarValor("Ingrese el DNI del pasajero:\n","string"));
-  
-    $pasajero->setTelefono(leerYValidarValor("Ingrese el telefono del pasajero:\n","string"));
-
-   // $viaje->updatePasajero($dni,$pasajero);
+    $nombre = leerYValidarValor("Ingrese el nombre del pasajero:\n","string");
+    $apellido = leerYValidarValor("Ingrese el apellido del pasajero:\n","string");
+    $telefono = leerYValidarValor("Ingrese el telefono del pasajero:\n","string");
+    $viaje->updatePasajero($pasajeroIndex,$nombre,$apellido,$telefono);
+    echo "\nPasajero actualizado\n"; 
 }
 
 function verPasajero($viaje){
