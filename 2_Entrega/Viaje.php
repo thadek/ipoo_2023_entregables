@@ -1,9 +1,5 @@
 <?php
 
-include_once("Pasajero.php");
-include_once("ResponsableV.php");
-
-
 class Viaje
 {
 
@@ -27,6 +23,7 @@ class Viaje
 
     /**
      * Genera un código de viaje nuevo por cada instancia que se cree
+     * Aumenta en 1 la variable clase $codigo cada vez que se crea un objeto
      */
     private static function generarCodigo()
     {
@@ -120,14 +117,15 @@ class Viaje
     public function addPasajero($pasajero)
     {
         $arrPasajeros = $this->getPasajeros();
+        $pValidacion = $this->getPasajero($pasajero->getDni());
 
         if (count($arrPasajeros) < $this->getCantMaxPasajeros()) {
-            if($this->getPasajero($pasajero->getDni())) {
-                throw new Exception("El pasajero con DNI " .$pasajero->getDni(). " ya existe");
-            }else{
-               array_push($arrPasajeros, $pasajero);
-               $this->setPasajeros($arrPasajeros);
-            } 
+            if ($pValidacion || $pValidacion === 0) {
+                throw new Exception("El pasajero con DNI " . $pasajero->getDni() . " ya existe");
+            } else {
+                array_push($arrPasajeros, $pasajero);
+                $this->setPasajeros($arrPasajeros);
+            }
             return true;
         } else {
             throw new Exception("No se puede agregar el pasajero, el viaje está completo");
@@ -144,7 +142,7 @@ class Viaje
     }
 
     /**
-     * Retorna el objeto pasajero buscado por dni, caso contrario retorna false
+     * Retorna la posición del pasajero en el array de pasajeros
      * @param string $dni
      */
     public function getPasajero($dni)
@@ -157,45 +155,38 @@ class Viaje
         $arrPasajeros = $this->getPasajeros();
         while ($i < count($arrPasajeros) && !$corte) {
             if ($arrPasajeros[$i]->getDni() == $dni) {
-                $pasajero = $arrPasajeros[$i];
+                $pasajero = $i;
                 $corte = true;
             }
             $i++;
         }
 
-        if ($pasajero) {
-            return $pasajero;
-        } else {
-            return false;
-        }
-
+        return $pasajero;
     }
 
     /**
      * Actualiza un pasajero del viaje
      * @param string $dni
      * @param Pasajero $pasajero
-     * @return string $response
+     * 
      */
     public function updatePasajero($dni, $pasajero)
     {
 
-        if($pasajero instanceof Pasajero){
-            $pSearch = $this->getPasajero($dni);
+        if ($pasajero instanceof Pasajero) {
+            $pSearch = $this->getPasajeros()[$this->getPasajero($dni)];
             $pSearch->setNombre($pasajero->getNombre());
             $pSearch->setApellido($pasajero->getApellido());
             $pSearch->setDni($pasajero->getDni());
             $pSearch->setTelefono($pasajero->getTelefono());
-        }else{
+        } else {
             throw new Exception("El pasajero no es una instancia de la clase Pasajero");
         }
-       
-
-      
     }
 
     /**
-     * Elimina un pasajero del viaje
+     * Elimina un pasajero del viaje, returna true si 
+     * se eliminó correctamente, false si no se encontró el pasajero
      * @param string $dni
      * @return boolean $isDeleted
      */
@@ -203,28 +194,20 @@ class Viaje
     {
         //Busco en el arreglo de pasajeros el dni y lo elimino
         $arrPasajeros = $this->getPasajeros();
-
-        $pasajeroIndex = null;
-        $corte = false;
-        $i = 0;
-        while($i < count($arrPasajeros) && !$corte){
-         if($arrPasajeros[$i]->getDni() == $dni){
-                $pasajeroIndex = $i;
-                $corte = true;
-            }
-            $i++;
-        }
-
+        $pasajeroIndex = $this->getPasajero($dni);
+        $isDeleted = false;
         if ($pasajeroIndex || $pasajeroIndex === 0) {
             unset($arrPasajeros[$pasajeroIndex]);
             //Reindexo el array para que no queden huecos <-< 
             $arrPasajeros = array_values($arrPasajeros);
             $this->setPasajeros($arrPasajeros);
-            return true;
-        } else {
-            throw new Exception("No existe ningún pasajero con el DNI $dni");
-        }
+            $isDeleted = true;
+        } 
+        return $isDeleted;
     }
+
+
+
 
     /**
      * Setea el array de pasajeros
@@ -234,7 +217,11 @@ class Viaje
     public function setPasajeros($pasajeros)
     {
         if (count($pasajeros) <= $this->getCantMaxPasajeros()) {
-            is_array($pasajeros) ? $this->pasajeros = $pasajeros : throw new Exception("El parámetro pasajeros debe ser un array");
+            if (is_array($pasajeros)) {
+                $this->pasajeros = $pasajeros;
+            } else {
+                throw new Exception("El parámetro pasajeros debe ser un array");
+            }
         } else {
             throw new Exception("La cantidad de pasajeros supera la cantidad máxima de pasajeros");
         }
@@ -248,13 +235,14 @@ class Viaje
     public function verListaPasajeros()
     {
 
-        if(count($this->getPasajeros()) == 0){
-            throw new Exception("No hay pasajeros cargados en el viaje.");
-        }
-        $response= "Lista de Pasajeros:";
-        $response.= "\n----------------------------------------\n";
-        foreach ($this->getPasajeros() as $pasajero) {
-          $response.= $pasajero . "\n";
+        if (count($this->getPasajeros()) == 0) {
+            $response = "No hay pasajeros en el viaje\n";
+        } else {
+            $response = "Lista de Pasajeros:";
+            $response .= "\n----------------------------------------\n";
+            foreach ($this->getPasajeros() as $pasajero) {
+                $response .= $pasajero . "\n";
+            }
         }
         return $response;
     }

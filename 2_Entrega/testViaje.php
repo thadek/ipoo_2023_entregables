@@ -86,6 +86,8 @@ function eliminarPasajero($viaje)
     $isDeleted = $viaje->removePasajero($dni);
     if($isDeleted){
         echo "\nSe eliminó correctamente el pasajero.\n";
+    }else{
+        echo "\nNo se encontró el pasajero.\n";
     }
 }
 
@@ -137,10 +139,13 @@ function verPasajeros($viaje){
 function editarPasajero($viaje){
     echo "Ingrese el DNI del pasajero a modificar\n";
     $dni = trim(fgets(STDIN));
-    $pasajero = $viaje->getPasajero($dni);
-    if(!$pasajero){
+    $pasajeroIndex = $viaje->getPasajero($dni);
+    if($pasajeroIndex === null){
         throw new Exception("No se encontró el pasajero con DNI: $dni");
     }
+
+    $pasajero = $viaje->getPasajeros()[$pasajeroIndex];
+
     $pasajero->setNombre(leerYValidarValor("Ingrese el nombre del pasajero:\n","string"));
    
     $pasajero->setApellido(leerYValidarValor("Ingrese el apellido del pasajero:\n","string"));
@@ -154,9 +159,9 @@ function editarPasajero($viaje){
 
 function verPasajero($viaje){
     $dni = leerYValidarValor("Ingrese el DNI del pasajero:\n","string");
-    $pasajero = $viaje->getPasajero($dni);
-    if($pasajero){
-        echo $pasajero . "\n";
+    $pasajeroIndex = $viaje->getPasajero($dni);
+    if($pasajeroIndex || $pasajeroIndex === 0){
+        echo $viaje->getPasajeros()[$pasajeroIndex];        
     }else{
         throw new Exception("No se encontró el pasajero con DNI: $dni");
     }
