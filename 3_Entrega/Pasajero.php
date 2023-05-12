@@ -1,5 +1,6 @@
 <?php
 
+
 class Pasajero {
 
 
@@ -48,12 +49,12 @@ class Pasajero {
 
     public function __toString()
     {
-        return "Nombre: " . $this->nombre . "\n" .
-        "Nro de Asiento: " . $this->nroAsiento . "\n" .
-        "Nro de Ticket: " . $this->nroTicket . "\n";
+        return "Nombre: " . $this->getNombre() . "\n" .
+        "Nro de Asiento: " . $this->getnroAsiento() . "\n" .
+        "Nro de Ticket: " . $this->getnroTicket() . "\n";
     }
 
-    
+
 
 
 }

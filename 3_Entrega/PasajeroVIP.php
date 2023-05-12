@@ -38,8 +38,8 @@ class PasajeroVIP extends Pasajero {
     public function __toString()
     {
         return parent::__toString() . 
-        "Nro de Viajero Frecuente: " . $this->nroViajeroFrecuente . "\n" .
-        "Cantidad de Millas: " . $this->cantMillas . "\n";
+        "Nro de Viajero Frecuente: " . $this->getNroViajeroFrecuente() . "\n" .
+        "Cantidad de Millas: " . $this->getCantMillas() . "\n";
     }
            
 

@@ -50,11 +50,11 @@ class PasajeroEspecial extends Pasajero {
     public function __toString()
     {
         return parent::__toString() . 
-        "Asistencia de Embarque: " . $this->asistenciaEmbarque . "\n" .
-        "Silla de Ruedas: " . $this->sillaDeRuedas . "\n" .
-        "Comida Especial: " . $this->comidaEspecial . "\n";
+        "Asistencia de Embarque: " . ($this->getAsistenciaEmbarque() ? "Si" : "No") . "\n" .
+        "Silla de Ruedas: " . ($this->getSillaDeRuedas() ? "Si" : "No") . "\n" .
+        "Comida Especial: " . ($this->getComidaEspecial() ? "Si" : "No") . "\n";
     }
 
-    
+
 
 }
