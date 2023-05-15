@@ -189,10 +189,7 @@ function editarPasajero($viaje)
     if ($pasajeroIndex === null) {
         throw new Exception("No se encontró el pasajero con num de ticket: $nroTicket");
     }
-
     $pasajero = $viaje->getPasajeros()[$pasajeroIndex];
-
-
     $nombre = leerYValidarValor("Ingrese el nombre del pasajero:\n", "string");
     $nroAsiento = leerYValidarValor("Ingrese el numero de asiento a ocupar:\n", "string");
     $pasajero->setNombre($nombre);
@@ -204,40 +201,53 @@ function editarPasajero($viaje)
     $vAnterior = $viaje->getCosto()*$pasajero->darPorcentajeIncremento();
 
     if ($pasajero instanceof PasajeroVIP) {
-
-       
-
-        $nroViajeroFrecuente = leerYValidarValor("Ingrese el numero de viajero frecuente:\n", "int");
-        $cantMillas = leerYValidarValor("Ingrese la cantidad de millas:\n", "int");
-        $pasajero->setNroViajeroFrecuente($nroViajeroFrecuente);
-        $pasajero->setCantMillas($cantMillas);
-
-        //Elimino el costo anterior
-        $viaje->setCostosAbonados($viaje->getCostosAbonados()-$vAnterior);
-        //Agrego el nuevo costo creando un nuevo pasaje
-        $costoActual = $viaje->calcularCostoPasajero($pasajero);
-        escribirVerde("\nCosto anterior: $ $vAnterior El nuevo costo es: $ $costoActual \n");
-
+        editarPasajeroVIP($viaje,$pasajero,$vAnterior);
     } elseif ($pasajero instanceof PasajeroEspecial) {
-
-        $asistencia = leerBool(leerYValidarValor("¿Contrata asistencia de embarque? S/N ", "string"));
-        $sillaDeRuedas = leerBool(leerYValidarValor("¿Silla de ruedas? S/N ", "string"));
-        $comidaEspecial = leerBool(leerYValidarValor("¿Comida especial? S/N ", "string"));
-        $pasajero->setAsistenciaEmbarque($asistencia);
-        $pasajero->setSillaDeRuedas($sillaDeRuedas);
-        $pasajero->setComidaEspecial($comidaEspecial);
-
-         //Elimino el costo anterior
-         $viaje->setCostosAbonados($viaje->getCostosAbonados()-$vAnterior);
-         //Agrego el nuevo costo creando un nuevo pasaje
-         $costoActual = $viaje->calcularCostoPasajero($pasajero);
-         escribirVerde("\nCosto anterior: $ $vAnterior El nuevo costo es: $ $costoActual \n");
-
+        editarPasajeroEspecial($viaje,$pasajero,$vAnterior);
     }
-
      escribirVerde("\nPasajero modificado correctamente\n");
    
 }
+
+
+function editarPasajeroVIP($viaje,$pasajero,$vAnterior){
+
+
+    $nroViajeroFrecuente = leerYValidarValor("Ingrese el numero de viajero frecuente:\n", "int");
+    $cantMillas = leerYValidarValor("Ingrese la cantidad de millas:\n", "int");
+    $pasajero->setNroViajeroFrecuente($nroViajeroFrecuente);
+    $pasajero->setCantMillas($cantMillas);
+
+    //Elimino el costo anterior
+    $viaje->setCostosAbonados($viaje->getCostosAbonados()-$vAnterior);
+    //Agrego el nuevo costo creando un nuevo pasaje
+    $costoActual = $viaje->calcularCostoPasajero($pasajero);
+
+    $viaje->setCostosAbonados($viaje->getCostosAbonados()+$costoActual);
+    escribirVerde("\nCosto anterior: $ $vAnterior El nuevo costo es: $ $costoActual \n");
+
+
+}
+
+
+function editarPasajeroEspecial($viaje,$pasajero,$vAnterior){
+    $asistencia = leerBool(leerYValidarValor("¿Contrata asistencia de embarque? S/N ", "string"));
+    $sillaDeRuedas = leerBool(leerYValidarValor("¿Silla de ruedas? S/N ", "string"));
+    $comidaEspecial = leerBool(leerYValidarValor("¿Comida especial? S/N ", "string"));
+    $pasajero->setAsistenciaEmbarque($asistencia);
+    $pasajero->setSillaDeRuedas($sillaDeRuedas);
+    $pasajero->setComidaEspecial($comidaEspecial);
+     //Elimino el costo anterior
+     $viaje->setCostosAbonados($viaje->getCostosAbonados()-$vAnterior);
+     //Agrego el nuevo costo creando un nuevo pasaje
+     $costoActual = $viaje->calcularCostoPasajero($pasajero);
+     $viaje->setCostosAbonados($viaje->getCostosAbonados()+$costoActual);
+     escribirVerde("\nCosto anterior: $ $vAnterior El nuevo costo es: $ $costoActual \n");
+}
+
+
+
+
 
 function verPasajero($viaje)
 {
