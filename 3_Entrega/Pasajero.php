@@ -6,16 +6,23 @@ class Pasajero {
 
     private $nombre;
     private $nroAsiento;
+    private static $contador = 0;
     private $nroTicket;
 
 
-    public function __construct($nombre, $nroAsiento, $nroTicket)
+    public function __construct($nombre, $nroAsiento)
     {
         $this->nombre = $nombre;
         $this->nroAsiento = $nroAsiento;
-        $this->nroTicket = $nroTicket;
+        self::$contador++;
+        $this->nroTicket = self::$contador;
     }
     
+    public function getNroTicket()
+    {
+        return $this->nroTicket;
+    }
+
 
     public function getNombre()
     {
@@ -25,11 +32,6 @@ class Pasajero {
     public function getNroAsiento()
     {
         return $this->nroAsiento;
-    }
-
-    public function getNroTicket()
-    {
-        return $this->nroTicket;
     }
 
     public function setNombre($nombre)
@@ -47,11 +49,22 @@ class Pasajero {
         $this->nroTicket = $nroTicket;
     }
 
+
+    /**
+     * Devuelve el porcentaje de incremento del precio del pasajero común. (10%)
+     */
+    public function darPorcentajeIncremento(){
+        return 1.1;
+    }
+
+
+
+
     public function __toString()
     {
         return "Nombre: " . $this->getNombre() . "\n" .
-        "Nro de Asiento: " . $this->getnroAsiento() . "\n" .
-        "Nro de Ticket: " . $this->getnroTicket() . "\n";
+        "Nro de Asiento: " . $this->getNroAsiento() . "\n" .
+        "Nro de Ticket: " . $this->getNroTicket() . "\n";
     }
 
 
