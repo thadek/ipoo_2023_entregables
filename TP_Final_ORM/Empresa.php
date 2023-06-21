@@ -178,7 +178,7 @@ class Empresa {
         $strViajes = "";
         foreach($arrViajes as $viaje){
             $strViajes .= 
-            "\nID: " . $viaje->getId() . " - DESTINO: " . $viaje->getDestino() . " - OCUPACIÓN: " . count($viaje->getPasajeros()) . "/" . $viaje->getCantMaxPasajeros() . " - IMPORTE: $" . $viaje->getImporte() . "\n";
+            "\nID: " . $viaje->getId() . " - DESTINO: " . $viaje->getDestino() . " - OCUPACIÓN: " . count($viaje->getPasajeros()) . "/" . $viaje->getCantMaxPasajeros() . " - IMPORTE: $" . $viaje->getImporte() ." - RESPONSABLE: ".$viaje->getResponsableV() . "\n";
         }
         return $strViajes;
      }
