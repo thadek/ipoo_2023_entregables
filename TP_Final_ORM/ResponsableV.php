@@ -7,6 +7,7 @@ class ResponsableV
     private $nroLicencia;
     private $nombre;
     private $apellido;
+    private $viajes;
   
 
 
@@ -16,15 +17,18 @@ class ResponsableV
         $this->nroLicencia = "";
         $this->nombre = "";
         $this->apellido = ""; 
+        $this->viajes = [];
     }
 
 
-    public function cargarResponsable($nroEmpleado, $nroLicencia, $nombre, $apellido)
+    public function cargarResponsable($nroEmpleado, $nroLicencia, $nombre, $apellido, $viajes = [])
     {
         $this->setNroEmpleado($nroEmpleado);
         $this->setNroLicencia($nroLicencia);
         $this->setNombre($nombre);
         $this->setApellido($apellido);
+        $this->setViajes($viajes);
+       
     }
 
 
@@ -48,6 +52,11 @@ class ResponsableV
         return $this->apellido;
     }
 
+    public function getViajes()
+    {
+        return $this->viajes;
+    }
+
     public function setNroEmpleado($nroEmpleado)
     {
         $this->nroEmpleado = $nroEmpleado;
@@ -68,6 +77,10 @@ class ResponsableV
         $this->apellido = $apellido;
     }
 
+    public function setViajes($viajes)
+    {
+        $this->viajes = $viajes;
+    }
 
 
     //Metodos ORM
@@ -172,10 +185,19 @@ class ResponsableV
     }
 
 
-   
-    
-
-
+   /**
+      * Retorna un string con los viajes del responsable
+      */
+      public function mostrarViajes(){
+        $arrViajes = $this->getViajes();
+        $strViajes = "\nViajes del responsable:\n
+        \n----------------------------------------\n";
+        foreach($arrViajes as $viaje){
+            $strViajes .= 
+            "\nID: " . $viaje->getId() . " - DESTINO: " . $viaje->getDestino() . " - OCUPACIÓN: " . count($viaje->getPasajeros()) . "/" . $viaje->getCantMaxPasajeros() . " - IMPORTE: $" . $viaje->getImporte() ."\n";
+        }
+        return $strViajes;
+     }
 
     public function __toString()
     {
@@ -183,6 +205,7 @@ class ResponsableV
         . $this->getApellido().", ".$this->getNombre().
         "\n----------------------------------------\n".
         "Nro. Empleado: " . $this->getNroEmpleado(). "\nNro. Licencia: " . $this->getNroLicencia()
+        . (count($this->getViajes())>0 ? $this->mostrarViajes() : "")
         . "\n----------------------------------------\n";
     }
 

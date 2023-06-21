@@ -242,6 +242,9 @@ function listarResponsables()
 {
     $responsables = ResponsableV::listar();
     foreach ($responsables as $responsable) {
+        //Cargo a demanda los viajes del responsable.-
+        $viajes = Viaje::listar("rnumeroempleado=".$responsable->getNroEmpleado());
+        $responsable->setViajes($viajes);
         escribirVerde($responsable);
     }
 }
